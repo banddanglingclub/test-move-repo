@@ -6,7 +6,8 @@
         <Found Context="routeData">
             @if (IsEmbedded)
             {
-                <LayoutView Layout="@typeof(EmbeddedLayout)" RouteData="@routeData" />
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(EmbeddedLayout)" />
+                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
             }
             else
             {
