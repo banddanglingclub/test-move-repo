@@ -44,6 +44,7 @@ import { RegistrationsComponent } from './components/registrations/registrations
 import { RegisterComponent } from './components/register/register.component';
 import { JuniorOpenRegistrationsComponent } from './components/junior-open-registrations/junior-open-registrations.component';
 import { GenerateBookPrintingPagesComponent } from './components/generate-book-printing-pages/generate-book-printing-pages.component';
+import { BlazorHostComponent } from './components/blazor-host/blazor-host.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: 'full'},
@@ -90,6 +91,9 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent},
   { path: 'juniorOpenRegistrations', component: JuniorOpenRegistrationsComponent},
   { path: 'generateBookPrintingPages', component: GenerateBookPrintingPagesComponent},
+
+  // generic host: /blazor/<blazorPath>
+  { path: 'blazor/:blazorPath', component: BlazorHostComponent },
 ];
 
 @NgModule({

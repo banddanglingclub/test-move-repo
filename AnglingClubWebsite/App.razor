@@ -1,8 +1,15 @@
 ﻿<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            @if (IsEmbedded)
+            {
+                <LayoutView Layout="@typeof(EmbeddedLayout)" RouteData="@routeData" />
+            }
+            else
+            {
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            }
         </Found>
         <NotFound>
             <PageTitle>Not found</PageTitle>
@@ -12,3 +19,8 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+@code {
+    private bool IsEmbedded =>
+        new Uri(NavigationManager.Uri).Query.Contains("embedded=true");
+}
