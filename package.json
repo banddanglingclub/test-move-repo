@@ -9,6 +9,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+    "engines": {
+    "node": ">=16.0.0 <17"
+  },
   "private": true,
   "dependencies": {
     "@angular-devkit/architect": "^0.1402.13",
