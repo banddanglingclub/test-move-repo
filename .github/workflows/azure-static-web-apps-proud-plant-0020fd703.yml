@@ -52,7 +52,7 @@ jobs:
           BLAZOR_WWWROOT="blazor-publish/wwwroot"
 
           mkdir -p "$ANG_DIST/new"
-          cp --verbose --recursive "$BLAZOR_WWWROOT/." "$ANG_DIST/new"
+          cp --verbose --recursive "$BLAZOR_WWWROOT" "$ANG_DIST/new"
           # copy staticwebapp.config.json if you keep it at repo root
           cp src/staticwebapp.config.json "$ANG_DIST/" || true
 
