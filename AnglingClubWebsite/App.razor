@@ -1,4 +1,7 @@
-﻿<CascadingAuthenticationState>
+﻿@using Microsoft.AspNetCore.Components.Routing
+@inject NavigationManager NavigationManager
+
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             @if (IsEmbedded)
