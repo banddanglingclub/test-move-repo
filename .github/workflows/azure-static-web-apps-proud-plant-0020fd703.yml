@@ -55,7 +55,7 @@ jobs:
           cp -R "$BLAZOR_WWWROOT/." "$ANG_DIST/new"
 
           # copy staticwebapp.config.json if you keep it at repo root
-          cp staticwebapp.config.json "$ANG_DIST/" || true
+          cp src/staticwebapp.config.json "$ANG_DIST/" || true
 
       # Deploy combined site
       - name: Build And Deploy
