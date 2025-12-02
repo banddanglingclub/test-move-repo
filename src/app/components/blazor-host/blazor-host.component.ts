@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -8,19 +9,22 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./blazor-host.component.css']
 })
 export class BlazorHostComponent implements OnInit, OnDestroy {
-  iframeSrc = '/new'; // default if nothing passed
+  iframeSrc!: SafeResourceUrl;
   private sub?: Subscription;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit(): void {
-    // react to route changes (e.g. user navigates between different blazor paths)
     this.sub = this.route.paramMap.subscribe(params => {
       const blazorPath = params.get('blazorPath') ?? '';
-      // Build Blazor URL: /new/<blazorPath>?embedded=true
-      // Make sure we don't get double slashes
       const trimmed = blazorPath.replace(/^\/+/, '');
-      this.iframeSrc = `/new/${trimmed}?embedded=true`;
+
+      const url = `/new/${trimmed}?embedded=true`;
+      // Tell Angular “this URL is safe for an iframe”
+      this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     });
   }
 
