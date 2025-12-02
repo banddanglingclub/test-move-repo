@@ -24,6 +24,13 @@ jobs:
       # Following came from ChatGPT, up until the commented out "Build and Deploy" step
       ######################################################################################
 
+      # Force Node version for Angular
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16.14.0"
+          cache: "npm"
+
       # Build Angular
       - name: Build Angular
         run: |
