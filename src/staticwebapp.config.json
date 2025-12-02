@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "route": "/new*",
+      "route": "/new/{*path}",
       "rewrite": "/new/index.html"
     }
   ],
@@ -9,8 +9,7 @@
     "rewrite": "index.html",
     "exclude": [
       "/assets/*",
-      "/*.css",
-      "/*.js",
+      "/*.{css,scss,js,png,jpg,gif,ico,svg,woff2}",
       "/new/*"
     ]
   }

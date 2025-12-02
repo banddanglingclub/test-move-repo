@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" />
     <title>AnglingClubWebsite</title>
-    <base href="/" />
+    <base href="/new/" />
+
     <link href="css/app.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
 
@@ -57,7 +58,12 @@
     <script src="deviceDetector.js"></script>
     <script src="google-maps.js"></script>
 
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js', { scope: '/new/' });
+        }
+    </script>
+
 </body>
 
 </html>
