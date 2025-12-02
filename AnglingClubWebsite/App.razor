@@ -4,16 +4,19 @@
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            @if (IsEmbedded)
-            {
-                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(EmbeddedLayout)" />
-                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-            }
-            else
-            {
-                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-            }
+            <AuthorizeRouteView RouteData="@routeData"
+                    DefaultLayout="@GetDefaultLayout()">
+                <NotAuthorized>
+                    <LayoutView Layout="@typeof(MainLayout)">
+                        <p>You are not authorized to access this resource.</p>
+                    </LayoutView>
+                </NotAuthorized>
+                <Authorizing>
+                    <LayoutView Layout="@typeof(MainLayout)">
+                        <p>Authorizing...</p>
+                    </LayoutView>
+                </Authorizing>
+            </AuthorizeRouteView>
         </Found>
         <NotFound>
             <PageTitle>Not found</PageTitle>
@@ -25,6 +28,14 @@
 </CascadingAuthenticationState>
 
 @code {
-    private bool IsEmbedded =>
-        new Uri(NavigationManager.Uri).Query.Contains("embedded=true");
+    private Type GetDefaultLayout()
+    {
+        var uri = new Uri(NavigationManager.Uri);
+        var query = uri.Query ?? string.Empty;
+
+        // Use EmbeddedLayout when called from Angular iframe: /new/...?...embedded=true
+        return query.Contains("embedded=true", StringComparison.OrdinalIgnoreCase)
+            ? typeof(EmbeddedLayout)    // content-only
+            : typeof(MainLayout);       // normal shell
+    }
 }
