@@ -7,6 +7,9 @@
       "route": "/new/service-worker-assets.js"
     },
     {
+      "route": "/new/manifest.json"
+    },
+    {
       "route": "/new/appsettings.json"
     },
     {
