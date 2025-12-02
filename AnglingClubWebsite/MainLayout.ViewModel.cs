@@ -208,8 +208,8 @@ namespace AnglingClubWebsite
             List<MenuItem> menuItems = new List<MenuItem>();
 
             menuItems.Add(new MenuItem { Id = "01", Name = "Welcome", NavigateUrl = "/"});
-            menuItems.Add(new MenuItem { Id = "02", Name = "News", NavigateUrl = "/News" });
-            menuItems.Add(new MenuItem { Id = "03", Name = "Club Waters", NavigateUrl = "/Waters" });
+            menuItems.Add(new MenuItem { Id = "02", Name = "News", NavigateUrl = "/news" });
+            menuItems.Add(new MenuItem { Id = "03", Name = "Club Waters", NavigateUrl = "/waters" });
             menuItems.Add(new MenuItem { Id = "04", Name = "Matches", NavigateUrl = "/Matches" });
             menuItems.Add(new MenuItem { Id = "05", Name = "Standings", HasSubMenu = true });
             menuItems.Add(new MenuItem { Id = "05.1", ParentId = "05", Name = "Leagues" });
@@ -241,7 +241,7 @@ namespace AnglingClubWebsite
 
             List<MenuItem> menuItems = new List<MenuItem>();
 
-            menuItems.Add(new MenuItem { Id = "11", Name = "Login", NavigateUrl = "/Login" });
+            menuItems.Add(new MenuItem { Id = "11", Name = "Login", NavigateUrl = "/login" });
 
             Menu.AddRange(menuItems);
             Menu = Menu.OrderBy(x => x.Id).ToList();
