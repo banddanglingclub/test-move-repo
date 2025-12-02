@@ -61,7 +61,7 @@ jobs:
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PROUD_PLANT_00XXX }}
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PROUD_PLANT_0020FD703 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
 
