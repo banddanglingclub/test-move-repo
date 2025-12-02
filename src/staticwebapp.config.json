@@ -1,7 +1,23 @@
 {
   "routes": [
     {
-      "route": "/new/{*path}",
+      "route": "/new/service-worker.js"
+    },
+    {
+      "route": "/new/service-worker-assets.js"
+    },
+    {
+      "route": "/new/_framework/*"
+    },
+    {
+      "route": "/new/css/*"
+    },
+    {
+      "route": "/new",
+      "rewrite": "/new/index.html"
+    },
+    {
+      "route": "/new/*",
       "rewrite": "/new/index.html"
     }
   ],
@@ -9,8 +25,8 @@
     "rewrite": "index.html",
     "exclude": [
       "/assets/*",
-      "/*.{css,scss,js,png,jpg,gif,ico,svg,woff2}",
-      "/new/*"
+      "/new/*",
+      "/*.{css,scss,js,png,jpg,gif,ico,svg,woff2}"
     ]
   }
 }
