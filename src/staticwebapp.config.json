@@ -7,10 +7,19 @@
       "route": "/new/service-worker-assets.js"
     },
     {
+      "route": "/new/*.{css,js,wasm,woff,woff2,png,jpg,jpeg,gif,ico,svg}"
+    },
+    {
       "route": "/new/_framework/*"
     },
     {
+      "route": "/new/_content/*"
+    },
+    {
       "route": "/new/css/*"
+    },
+    {
+      "route": "/new/images/*"
     },
     {
       "route": "/new",
@@ -25,8 +34,8 @@
     "rewrite": "index.html",
     "exclude": [
       "/assets/*",
-      "/new/*",
-      "/*.{css,scss,js,png,jpg,gif,ico,svg,woff2}"
+      "/*.{css,scss,js,wasm,png,jpg,jpeg,gif,ico,svg,woff,woff2}",
+      "/new/*"
     ]
   }
 }
