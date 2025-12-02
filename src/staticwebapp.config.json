@@ -7,6 +7,9 @@
       "route": "/new/service-worker-assets.js"
     },
     {
+      "route": "/new/appsettings.json"
+    },
+    {
       "route": "/new/*.{css,js,wasm,woff,woff2,png,jpg,jpeg,gif,ico,svg}"
     },
     {
