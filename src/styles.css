@@ -325,3 +325,10 @@ mat-form-field {
     }
 
 }
+
+/* nav-content should fill all remaining space under the toolbar */
+.nav-content {
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;  /* important so children can shrink inside */
+}
