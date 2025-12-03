@@ -210,7 +210,7 @@ namespace AnglingClubWebsite
             menuItems.Add(new MenuItem { Id = "01", Name = "Welcome", NavigateUrl = "/"});
             menuItems.Add(new MenuItem { Id = "02", Name = "News", NavigateUrl = "/news" });
             menuItems.Add(new MenuItem { Id = "03", Name = "Club Waters", NavigateUrl = "/waters" });
-            menuItems.Add(new MenuItem { Id = "04", Name = "Matches", NavigateUrl = "/Matches" });
+            menuItems.Add(new MenuItem { Id = "04", Name = "Matches", NavigateUrl = "/matches" });
             menuItems.Add(new MenuItem { Id = "05", Name = "Standings", HasSubMenu = true });
             menuItems.Add(new MenuItem { Id = "05.1", ParentId = "05", Name = "Leagues" });
             menuItems.Add(new MenuItem { Id = "05.2", ParentId = "05", Name = "Weights" });

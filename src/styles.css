@@ -4,6 +4,23 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+app-root {
+  display: block;
+  height: 100%;
+}
+
+/* Angular Material sidenav container full-height */
+.sidenav-container {
+  height: 100%;
+}
+
+/* nav-content should fill all remaining space under the toolbar */
+.nav-content {
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;  /* important so children can shrink inside */
+}
+
 .hidden {
     display: none;
 }
@@ -326,9 +343,3 @@ mat-form-field {
 
 }
 
-/* nav-content should fill all remaining space under the toolbar */
-.nav-content {
-  flex: 1 1 auto;
-  display: flex;
-  min-height: 0;  /* important so children can shrink inside */
-}
