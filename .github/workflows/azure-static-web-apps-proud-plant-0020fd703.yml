@@ -41,14 +41,6 @@ jobs:
           output_location: "dist/AnglingClubWebsiteAng" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
-      # copy staticwebapp.config.json if you keep it at repo root
-      - name: copy staticwebapp.config.json
-        run: |
-          ANG_DIST="dist/AnglingClubWebsiteAng"   # your existing output_location
- 
-          # copy staticwebapp.config.json if you keep it at repo root
-          cp src/staticwebapp.config.json "$ANG_DIST/" || true
-
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
