@@ -46,9 +46,16 @@
     </Content>
   </ItemGroup>
 
-  <!--Only applies when publishing for Release and doing gradual migration from Angular to Blazor-->
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <BaseHref>/new/</BaseHref>
-  </PropertyGroup>
-  
+  <Target Name="SelectIndexHtml" BeforeTargets="Build">
+    <!-- Debug / local dev: base "/" -->
+    <Copy SourceFiles="wwwroot\index.dev.html"
+          DestinationFiles="wwwroot\index.html"
+          Condition="'$(Configuration)' == 'Debug'" />
+
+    <!-- Release / publish: base "/new/" -->
+    <Copy SourceFiles="wwwroot\index.prod.html"
+          DestinationFiles="wwwroot\index.html"
+          Condition="'$(Configuration)' == 'Release'" />
+  </Target>
+
 </Project>
