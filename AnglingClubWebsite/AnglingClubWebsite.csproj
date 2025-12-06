@@ -46,14 +46,20 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Treat templates as non-content so they are not published -->
+    <None Include="IndexTemplates\index.dev.html" />
+    <None Include="IndexTemplates\index.prod.html" />
+  </ItemGroup>
+
   <Target Name="SelectIndexHtml" BeforeTargets="Build">
     <!-- Debug / local dev: base "/" -->
-    <Copy SourceFiles="wwwroot\index.dev.html"
+    <Copy SourceFiles="IndexTemplates\index.dev.html"
           DestinationFiles="wwwroot\index.html"
           Condition="'$(Configuration)' == 'Debug'" />
 
     <!-- Release / publish: base "/new/" -->
-    <Copy SourceFiles="wwwroot\index.prod.html"
+    <Copy SourceFiles="IndexTemplates\index.prod.html"
           DestinationFiles="wwwroot\index.html"
           Condition="'$(Configuration)' == 'Release'" />
   </Target>
