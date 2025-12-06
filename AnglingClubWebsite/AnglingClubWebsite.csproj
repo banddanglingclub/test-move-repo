@@ -4,7 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+  
+    <!--Not needed until migration from ang is complete-->
+    <!-- <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest> -->
+  
     <UserSecretsId>f2517751-8bef-4a2b-9ba1-d7e787c957bc</UserSecretsId>
   </PropertyGroup>
 
