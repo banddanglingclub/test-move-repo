@@ -1,10 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    <UserSecretsId>f2517751-8bef-4a2b-9ba1-d7e787c957bc</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -45,4 +46,9 @@
     </Content>
   </ItemGroup>
 
+  <!--Only applies when publishing for Release and doing gradual migration from Angular to Blazor-->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <BaseHref>/new/</BaseHref>
+  </PropertyGroup>
+  
 </Project>
