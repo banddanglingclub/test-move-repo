@@ -1,4 +1,4 @@
-﻿@inject NavigationManager NavigationManager
+@inject NavigationManager NavigationManager
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
@@ -28,6 +28,7 @@
 </CascadingAuthenticationState>
 
 @code {
+    // TODO Ang to Blazor Migration - only needed until migation complete
     private Type GetDefaultLayout()
     {
         var uri = new Uri(NavigationManager.Uri);
@@ -38,4 +39,9 @@
             ? typeof(EmbeddedLayout)    // content-only
             : typeof(MainLayout);       // normal shell
     }
+
+    /* TODO Ang to Blazor Migration - HTML looked like this before adding GetDefaultLayout()
+      <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    */ 
+
 }
