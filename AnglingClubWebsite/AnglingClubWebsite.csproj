@@ -59,14 +59,10 @@
   <!-- TODO Ang to Blazor Migration - only needed until migration from ang is complete -->
   <Target Name="SelectIndexHtml" BeforeTargets="Build">
     <!-- Debug / local dev: base "/" -->
-    <Copy SourceFiles="IndexTemplates\index.dev.html"
-          DestinationFiles="wwwroot\index.html"
-          Condition="'$(Configuration)' == 'Debug'" />
+    <Copy SourceFiles="IndexTemplates\index.dev.html" DestinationFiles="wwwroot\index.html" Condition="'$(Configuration)' == 'Debug'" />
 
     <!-- Release / publish: base "/new/" -->
-    <Copy SourceFiles="IndexTemplates\index.prod.html"
-          DestinationFiles="wwwroot\index.html"
-          Condition="'$(Configuration)' == 'Release'" />
+    <Copy SourceFiles="IndexTemplates\index.prod.html" DestinationFiles="wwwroot\index.html" Condition="'$(Configuration)' == 'Release'" />
   </Target>
 
 </Project>
