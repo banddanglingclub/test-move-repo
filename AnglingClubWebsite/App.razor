@@ -1,4 +1,5 @@
 @inject NavigationManager NavigationManager
+@inject HostBridge HostBridge // TODO Ang to Blazor Migration - only needed until migation complete
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
@@ -38,6 +39,12 @@
         return query.Contains("embedded=true", StringComparison.OrdinalIgnoreCase)
             ? typeof(EmbeddedLayout)    // content-only
             : typeof(MainLayout);       // normal shell
+    }
+
+    // TODO Ang to Blazor Migration - only needed until migation complete
+    protected override async Task OnInitializedAsync()
+    {
+        await HostBridge.InitializeAsync();
     }
 
     /* TODO Ang to Blazor Migration - HTML looked like this before adding GetDefaultLayout()

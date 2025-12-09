@@ -66,4 +66,7 @@ builder.Services.AddTransient<IClubEventService, ClubEventService>();
 
 builder.Services.AddAuthorizationCore();
 
+// TODO Ang to Blazor Migration - services only needed during migration
+builder.Services.AddScoped<HostBridge>();
+
 await builder.Build().RunAsync();

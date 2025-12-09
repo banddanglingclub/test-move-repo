@@ -50,6 +50,11 @@ const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: 'full'},
   { path: 'login', component: LoginComponent, canDeactivate:[DeactivateGuardService]  },
   { path: 'logout', component: LogoutComponent },
+  
+  // { path: 'welcome', component: WelcomeComponent },  // Angular welcome page
+  { path: '', component: BlazorHostComponent },         // Blazor welcome page
+
+  { path: 'welcome', component: WelcomeComponent },
   { path: 'welcome', component: WelcomeComponent },
   { path: 'news', component: NewsComponent },
   { path: 'waters', component: WatersComponent },
@@ -92,8 +97,8 @@ const routes: Routes = [
   { path: 'juniorOpenRegistrations', component: JuniorOpenRegistrationsComponent},
   { path: 'generateBookPrintingPages', component: GenerateBookPrintingPagesComponent},
 
-  // generic host: /blazor/<blazorPath>
-  { path: 'blazor/:blazorPath', component: BlazorHostComponent },
+ // Single host route for “Blazor area”
+  { path: 'blazor', component: BlazorHostComponent },
 ];
 
 @NgModule({

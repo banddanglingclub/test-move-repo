@@ -30,40 +30,44 @@
 </head>
 
 <body>
-    <div id="app">
-        <div class="loading">
+  <div id="app">
+    <div class="loading">
 
-            <!--<div class="loading-text">
-                <i class="fa-solid fa-spinner fa-spin fa-2xl"></i>
-            </div>-->
-            <div class="loading-image-center">
-                <img src="images/FishingClubLogo3.png" />
-            </div>
-            <div class="title-text">
-                <i class="fa-solid fa-spinner fa-spin fa-2xl"></i>
-                <!--                <span>Boroughbridge & District Angling Club</span>-->
-            </div>
-        </div>
+      <!--<div class="loading-text">
+        <i class="fa-solid fa-spinner fa-spin fa-2xl"></i>
+      </div>-->
 
+      <div class="loading-image-center">
+        <img src="images/FishingClubLogo3.png" />
+      </div>
+
+      <div class="title-text">
+        <i class="fa-solid fa-spinner fa-spin fa-2xl"></i>
+        <!--                <span>Boroughbridge & District Angling Club</span>-->
+      </div>
     </div>
 
-    <div id="blazor-error-ui">
-        An unhandled error has occurred.
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
-    </div>
-    <script src="_framework/blazor.webassembly.js"></script>
+  </div>
 
-    <script src="getDimensions.js"></script>
-    <script src="deviceDetector.js"></script>
-    <script src="google-maps.js"></script>
+  <div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+  </div>
+  <script src="_framework/blazor.webassembly.js"></script>
+
+  <script src="embeddedHost.js"></script> <!-- TODO Ang to Blazor Migration - only needed during migration -->
+
+  <script src="getDimensions.js"></script>
+  <script src="deviceDetector.js"></script>
+  <script src="google-maps.js"></script>
 
   <!--Not needed until migration from ang is complete-->
-    <!--<script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js', { scope: '/new/' });
-        }
-    </script>-->
+  <!--<script>
+      if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('service-worker.js', { scope: '/new/' });
+      }
+  </script>-->
 
 </body>
 
