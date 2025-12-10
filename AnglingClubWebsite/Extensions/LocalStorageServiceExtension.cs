@@ -1,4 +1,4 @@
-﻿using Blazored.LocalStorage;
+using Blazored.LocalStorage;
 using System.Text;
 using System.Text.Json;
 
@@ -17,19 +17,39 @@ namespace AnglingClubWebsite.Extensions
 
         public static async Task<T> ReadEncryptedItem<T>(this ILocalStorageService localStorageService, string key)
         {
-            var base64Json = await localStorageService.GetItemAsync<string>(key);
-            
-            if (base64Json == null)
+            var storageItem = await localStorageService.GetItemAsync<string>(key);
+            string? itemJson;
+
+            if (storageItem == null)
             {
                 return default!;
             }
 
-            var itemJsonBytes = Convert.FromBase64String(base64Json!);
-            var itemJson = Encoding.UTF8.GetString(itemJsonBytes);
+            try
+            {
+                var itemJsonBytes = Convert.FromBase64String(storageItem!);
+                itemJson = Encoding.UTF8.GetString(itemJsonBytes);
 
-            var item = JsonSerializer.Deserialize<T>(itemJson);
+            }
+            catch (System.FormatException)
+            {
+              // TODO Ang to Blazor Migration - not needed after migration complete
+              // Not in base64 so attempting to read plain json
+              itemJson = storageItem;
+            }
+
+            if (itemJson == null)
+            {
+              return default!;
+            }
+
+            var item = JsonSerializer.Deserialize<T>(itemJson, new JsonSerializerOptions
+            {
+              PropertyNameCaseInsensitive = true
+            });
 
             return item!;
+
         }
 
     }

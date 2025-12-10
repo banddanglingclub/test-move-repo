@@ -18,180 +18,165 @@ using System.Text.Json;
 
 namespace Fishing.Client.Services
 {
-    public class AuthenticationService : IAuthenticationService
+  public class AuthenticationService : IAuthenticationService
+  {
+    private readonly IHttpClientFactory _factory;
+    private readonly AuthenticationStateProvider _stateProvider;
+    private ILocalStorageService _localStorageService;
+    private readonly ILogger<AuthenticationService> _logger;
+    private readonly ICurrentUserService _currentUserService;
+
+    private const string JWT_KEY = nameof(JWT_KEY);
+    private const string REFRESH_KEY = nameof(REFRESH_KEY);
+    private const string CONTROLLER = "Members";
+
+    //private string? _jwtCache;
+
+    public event Action<string?>? LoginChange;
+
+    public AuthenticationService(IHttpClientFactory factory, ILocalStorageService localStorageService, AuthenticationStateProvider stateProvider, ILogger<AuthenticationService> logger, ICurrentUserService currentUserService)
     {
-        private readonly IHttpClientFactory _factory;
-        private readonly AuthenticationStateProvider _stateProvider;
-        private ILocalStorageService _localStorageService;
-        private readonly ILogger<AuthenticationService> _logger;
-        private readonly ICurrentUserService _currentUserService;
+      _factory = factory;
+      _localStorageService = localStorageService;
+      _stateProvider = stateProvider;
+      _logger = logger;
+      _currentUserService = currentUserService;
+    }
 
-        private const string JWT_KEY = nameof(JWT_KEY);
-        private const string REFRESH_KEY = nameof(REFRESH_KEY);
-        private const string CONTROLLER = "Members";
+    //public async ValueTask<string> GetJwtAsync()
+    //{
+    //    if (string.IsNullOrEmpty(_jwtCache))
+    //        _jwtCache = await _localStorageService.GetItemAsync<string>(JWT_KEY);
 
-        //private string? _jwtCache;
+    //    return _jwtCache;
+    //}
 
-        public event Action<string?>? LoginChange;
+    public async Task LogoutAsync()
+    {
+      var customAuthStateProvider = (CustomAuthenticationStateProvider)_stateProvider;
 
-        public AuthenticationService(IHttpClientFactory factory, ILocalStorageService localStorageService, AuthenticationStateProvider stateProvider, ILogger<AuthenticationService> logger, ICurrentUserService currentUserService)
-        {
-            _factory = factory;
-            _localStorageService = localStorageService;
-            _stateProvider = stateProvider;
-            _logger = logger;
-            _currentUserService = currentUserService;
-        }
+      await customAuthStateProvider.UpdateAuthenticationState(null);
 
-        //public async ValueTask<string> GetJwtAsync()
-        //{
-        //    if (string.IsNullOrEmpty(_jwtCache))
-        //        _jwtCache = await _localStorageService.GetItemAsync<string>(JWT_KEY);
+      //_currentUserService.User = new ClientMemberDto();
 
-        //    return _jwtCache;
-        //}
+      //var response = await _factory.CreateClient(Constants.HTTP_CLIENT_KEY).DeleteAsync("api/authentication/revoke");
 
-        public async Task LogoutAsync()
-        {
-            var customAuthStateProvider = (CustomAuthenticationStateProvider)_stateProvider;
+      //await _localStorageService.RemoveItemAsync(JWT_KEY);
+      //await _localStorageService.RemoveItemAsync(REFRESH_KEY);
 
-            await customAuthStateProvider.UpdateAuthenticationState(null);
+      ////_jwtCache = null;
 
-            //_currentUserService.User = new ClientMemberDto();
+      //await Console.Out.WriteLineAsync($"Revoke gave response {response.StatusCode}");
 
-            //var response = await _factory.CreateClient(Constants.HTTP_CLIENT_KEY).DeleteAsync("api/authentication/revoke");
+      //LoginChange?.Invoke(null);
+    }
 
-            //await _localStorageService.RemoveItemAsync(JWT_KEY);
-            //await _localStorageService.RemoveItemAsync(REFRESH_KEY);
+    public async Task<ClientMemberDto> GetCurrentUser()
+    {
+      _logger.LogWarning("AuthenticationService.GetCurrentUser called");
 
-            ////_jwtCache = null;
+      var authenticatedMember = await _localStorageService.ReadEncryptedItem<AuthenticateResponse>(Constants.AUTH_KEY);
 
-            //await Console.Out.WriteLineAsync($"Revoke gave response {response.StatusCode}");
+      if (authenticatedMember == null)
+      {
+        return new ClientMemberDto();
+      }
 
-            //LoginChange?.Invoke(null);
-        }
+      _logger.LogWarning($"AuthenticationService.GetCurrentUser authenticatedMember = {JsonSerializer.Serialize(authenticatedMember)}");
 
-        public async Task<ClientMemberDto> GetCurrentUser()
-        {
-            _logger.LogWarning("AuthenticationService.GetCurrentUser called");
+      return new ClientMemberDto(new JwtSecurityTokenHandler().ReadJwtToken(authenticatedMember.Token));
+    }
 
-            AuthenticateResponse? authenticatedMember;
+    private static string GetUsername(string token)
+    {
+      var jwt = new JwtSecurityToken(token);
 
-            try
+      return jwt.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+    }
+
+    public async Task<bool> isLoggedIn()
+    {
+      var customAuthStateProvider = (CustomAuthenticationStateProvider)_stateProvider;
+
+      var jwt = await customAuthStateProvider.GetToken();
+
+      return !string.IsNullOrEmpty(jwt);
+
+    }
+
+    public async Task<bool> LoginAsync(AuthenticateRequest model)
+    {
+      var http = _factory.CreateClient(Constants.HTTP_CLIENT_KEY);
+      http.BaseAddress = new Uri($"{http.BaseAddress!.ToString()}api/{CONTROLLER}/");
+
+      _logger.LogInformation($"Accessing {http.BaseAddress}{Constants.API_AUTHENTICATE}");
+
+      var response = await http.PostAsync(Constants.API_AUTHENTICATE,
+                                                  JsonContent.Create(model));
+
+      if (!response.IsSuccessStatusCode)
+      {
+        return false;
+      }
+
+      try
+      {
+        var content = await response.Content.ReadFromJsonAsync<AuthenticateResponse>();
+
+        if (content == null)
+          throw new InvalidDataException();
+
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)_stateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(content);
+
+
+        //await _localStorageService.SetItemAsync(JWT_KEY, content.Token);
+        //await _localStorageService.SetItemAsync(REFRESH_KEY, content.RefreshToken);
+
+        LoginChange?.Invoke(GetUsername(content.Token));
+
+        //_currentUserService.User = await GetCurrentUser();
+
+        return true;
+
+      }
+      catch (Exception)
+      {
+
+        throw;
+      }
+    }
+
+    /*
+            public async Task<bool> RefreshAsync()
             {
-                authenticatedMember = await _localStorageService.ReadEncryptedItem<AuthenticateResponse>(Constants.AUTH_KEY);
-            }
-            catch (System.FormatException)
-            {
-              // TODO Ang to Blazor Migration - not needed after migration complete
-              // Not in base64 so attempting to read plain json
-              var json = await _localStorageService.GetItemAsStringAsync(Constants.AUTH_KEY);
-              authenticatedMember = JsonSerializer.Deserialize<AuthenticateResponse>(json!, new JsonSerializerOptions
-              {
-                  PropertyNameCaseInsensitive = true
-              });
-            }
+                var model = new RefreshModel
+                {
+                    AccessToken = await _localStorageService.GetItemAsync<string>(JWT_KEY),
+                    RefreshToken = await _localStorageService.GetItemAsync<string>(REFRESH_KEY)
+                };
 
-            if (authenticatedMember == null)
-            {
-                return new ClientMemberDto();
-            }
+                var response = await _factory.CreateClient(Constants.HTTP_CLIENT_KEY).PostAsync("api/authentication/refresh",
+                                                            JsonContent.Create(model));
 
-          _logger.LogWarning($"AuthenticationService.GetCurrentUser authenticatedMember = {JsonSerializer.Serialize(authenticatedMember)}");
+                if (!response.IsSuccessStatusCode)
+                {
+                    await LogoutAsync();
 
-          return new ClientMemberDto(new JwtSecurityTokenHandler().ReadJwtToken(authenticatedMember.Token));
-        }
+                    return false;
+                }
 
-        private static string GetUsername(string token)
-        {
-            var jwt = new JwtSecurityToken(token);
-
-            return jwt.Claims.First(c => c.Type == ClaimTypes.Name).Value;
-        }
-
-        public async Task<bool> isLoggedIn()
-        {
-            var customAuthStateProvider = (CustomAuthenticationStateProvider)_stateProvider;
-
-            var jwt = await customAuthStateProvider.GetToken();
-
-            return !string.IsNullOrEmpty(jwt);
-
-        }
-
-        public async Task<bool> LoginAsync(AuthenticateRequest model)
-        {
-            var http = _factory.CreateClient(Constants.HTTP_CLIENT_KEY);
-            http.BaseAddress = new Uri($"{http.BaseAddress!.ToString()}api/{CONTROLLER}/");
-
-            _logger.LogInformation($"Accessing {http.BaseAddress}{Constants.API_AUTHENTICATE}");
-
-            var response = await http.PostAsync(Constants.API_AUTHENTICATE,
-                                                        JsonContent.Create(model));
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return false;
-            }
-
-            try
-            {
-                var content = await response.Content.ReadFromJsonAsync<AuthenticateResponse>();
+                var content = await response.Content.ReadFromJsonAsync<LoginResponse>();
 
                 if (content == null)
                     throw new InvalidDataException();
 
-                var customAuthStateProvider = (CustomAuthenticationStateProvider)_stateProvider;
-                await customAuthStateProvider.UpdateAuthenticationState(content);
+                await _localStorageService.SetItemAsync(JWT_KEY, content.JwtToken);
+                await _localStorageService.SetItemAsync(REFRESH_KEY, content.RefreshToken);
 
-
-                //await _localStorageService.SetItemAsync(JWT_KEY, content.Token);
-                //await _localStorageService.SetItemAsync(REFRESH_KEY, content.RefreshToken);
-
-                LoginChange?.Invoke(GetUsername(content.Token));
-
-                //_currentUserService.User = await GetCurrentUser();
-
+                _jwtCache = content.JwtToken;
                 return true;
-
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        /*
-                public async Task<bool> RefreshAsync()
-                {
-                    var model = new RefreshModel
-                    {
-                        AccessToken = await _localStorageService.GetItemAsync<string>(JWT_KEY),
-                        RefreshToken = await _localStorageService.GetItemAsync<string>(REFRESH_KEY)
-                    };
-
-                    var response = await _factory.CreateClient(Constants.HTTP_CLIENT_KEY).PostAsync("api/authentication/refresh",
-                                                                JsonContent.Create(model));
-
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        await LogoutAsync();
-
-                        return false;
-                    }
-
-                    var content = await response.Content.ReadFromJsonAsync<LoginResponse>();
-
-                    if (content == null)
-                        throw new InvalidDataException();
-
-                    await _localStorageService.SetItemAsync(JWT_KEY, content.JwtToken);
-                    await _localStorageService.SetItemAsync(REFRESH_KEY, content.RefreshToken);
-
-                    _jwtCache = content.JwtToken;
-                    return true;
-                }
-        */
-    }
+    */
+  }
 }
