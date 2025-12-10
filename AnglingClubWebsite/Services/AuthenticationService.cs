@@ -1,4 +1,4 @@
-﻿using Blazored.LocalStorage;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,6 +13,7 @@ using AnglingClubWebsite.Extensions;
 using AnglingClubShared.Entities;
 using AnglingClubShared.DTOs;
 using static System.Net.WebRequestMethods;
+using System.Text.Json;
 
 
 namespace Fishing.Client.Services
@@ -72,13 +73,33 @@ namespace Fishing.Client.Services
 
         public async Task<ClientMemberDto> GetCurrentUser()
         {
-            var authenticatedMember = await _localStorageService.ReadEncryptedItem<AuthenticateResponse>(Constants.AUTH_KEY);
+            _logger.LogWarning("AuthenticationService.GetCurrentUser called");
+
+            AuthenticateResponse? authenticatedMember;
+
+            try
+            {
+                authenticatedMember = await _localStorageService.ReadEncryptedItem<AuthenticateResponse>(Constants.AUTH_KEY);
+            }
+            catch (System.FormatException)
+            {
+              // TODO Ang to Blazor Migration - not needed after migration complete
+              // Not in base64 so attempting to read plain json
+              var json = await _localStorageService.GetItemAsStringAsync(Constants.AUTH_KEY);
+              authenticatedMember = JsonSerializer.Deserialize<AuthenticateResponse>(json!, new JsonSerializerOptions
+              {
+                  PropertyNameCaseInsensitive = true
+              });
+            }
+
             if (authenticatedMember == null)
             {
                 return new ClientMemberDto();
             }
 
-            return new ClientMemberDto(new JwtSecurityTokenHandler().ReadJwtToken(authenticatedMember.Token));
+          _logger.LogWarning($"AuthenticationService.GetCurrentUser authenticatedMember = {JsonSerializer.Serialize(authenticatedMember)}");
+
+          return new ClientMemberDto(new JwtSecurityTokenHandler().ReadJwtToken(authenticatedMember.Token));
         }
 
         private static string GetUsername(string token)
