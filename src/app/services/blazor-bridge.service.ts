@@ -29,7 +29,7 @@ export class BlazorBridgeService {
   }
 
   navigate(path: string) {
-    console.log('[BlazorBridge] navigate called', path, this.frameWindow);
+    console.log(`[BlazorBridge] navigate called [${path}] `, this.frameWindow);
 
     // Always remember the latest requested path
     this.queuedPath = path;
@@ -60,7 +60,7 @@ export class BlazorBridgeService {
   }
 
   private sendNavigate(path: string) {
-    console.log('[BlazorBridge] sending navigate to', path);
+    console.log(`[BlazorBridge] sending navigate to [${path}]`);
 
     if (!this.frameWindow) {
       console.warn('[BlazorBridge] frameWindow is not set!');

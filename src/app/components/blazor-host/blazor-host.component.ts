@@ -28,19 +28,27 @@ export class BlazorHostComponent implements OnInit, OnDestroy {
 
     // Which page did Angular ask for when navigating to /blazor?
     // Prefer router state when available, otherwise fall back to history.state
+    // 1. Read desired Blazor page from router state or history.state
     const nav = this.router.getCurrentNavigation();
-    const state = (nav && nav.extras && nav.extras.state) ? nav.extras.state : window.history.state;
+    const state = (nav && nav.extras && nav.extras.state)
+      ? nav.extras.state
+      : window.history.state;
     const page = state && state['blazorPage'] as string | undefined;
 
-    let rawUrl: string;
-    if (page) {
-      // Start straight on /<page>?embedded=true
-      rawUrl = `${environment.blazorBaseUrl}/${page}?embedded=true`;
-    } else {
-      // No specific page requested → default welcome
-      rawUrl = `${environment.blazorBaseUrl}/?embedded=true`;
-    }
+    // 2. Decide base URL for Blazor
+    //    - Dev: use localhost Blazor dev server
+    //    - Prod: force /new on the current origin (ignore any weird env config)
+    const base = environment.production
+      ? `${window.location.origin}/new`
+      : environment.blazorBaseUrl;   // e.g. 'http://localhost:7099'
 
+    // 3. Build the final iframe URL
+    //    page = 'news'  ->  https://site/new/news?embedded=true
+    //    page = undefined -> https://site/new/?embedded=true
+    const pathSegment = page ? `/${page}` : '/';
+    const rawUrl = `${base}${pathSegment}?embedded=true`;
+    
+    console.log('[BlazorHost] iframeSrc set to', rawUrl);
     this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
 
     // Listen for "blazor-ready" so we know when we can send messages

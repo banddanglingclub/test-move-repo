@@ -28,7 +28,7 @@ public class HostBridge : IAsyncDisposable
   [JSInvokable]
   public Task HandleNavigate(string path)
   {
-    Console.WriteLine($"HostBridge: Navigate to {path}");
+    Console.WriteLine($"HostBridge: Navigate to [{path}]");
     // Normal Blazor navigation (embedded layout will still apply)
     if(string.IsNullOrWhiteSpace(path))
         path = "/";
