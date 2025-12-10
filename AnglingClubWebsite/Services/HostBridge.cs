@@ -29,21 +29,34 @@ public class HostBridge : IAsyncDisposable
   public Task HandleNavigate(string path)
   {
     Console.WriteLine($"HostBridge: Navigate to [{path}]");
-    // Normal Blazor navigation (embedded layout will still apply)
-    if(string.IsNullOrWhiteSpace(path))
-        path = "/";
 
-    if (!path.StartsWith("/"))
-      path = "/" + path;
+    // Treat null/empty as "" so we stay on the "root" page of the Blazor app
+    if (path is null)
+      path = string.Empty;
 
-    // Look at the current URI to see if we're in "embedded" mode
+    // Make sure it's a *relative* path (no leading slash)
+    path = path.TrimStart('/');   // "news" instead of "/news"
+
     var currentUri = new Uri(_nav.Uri);
-    var query = currentUri.Query;      // e.g. "?embedded=true" or ""
+    var query = currentUri.Query; // e.g. "?embedded=true"
 
-    var target = string.IsNullOrEmpty(query)
-        ? path
-        : $"{path}{query}";           // "/news?embedded=true"
+    string target;
 
+    if (string.IsNullOrEmpty(path))
+    {
+      // Just "?embedded=true" → stays on the current base, e.g. "/new/?embedded=true"
+      target = string.IsNullOrEmpty(query) ? string.Empty : query;
+    }
+    else
+    {
+      // "news?embedded=true" → resolved relative to the current base:
+      // dev:  "/news?embedded=true"
+      // prod: "/new/news?embedded=true"
+      target = string.IsNullOrEmpty(query)
+          ? path
+          : $"{path}{query}";
+    }
+    
     _nav.NavigateTo(target, forceLoad: false);
     NavigateRequested?.Invoke(path);
     return Task.CompletedTask;
