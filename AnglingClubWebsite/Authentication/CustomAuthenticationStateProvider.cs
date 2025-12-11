@@ -80,7 +80,9 @@ namespace AnglingClubWebsite.Authentication
 
                 if (rememberMe)
                 {
-                    await _localStorageService.SaveItemEncrypted(Constants.AUTH_KEY, userSession);
+                    
+                    await _localStorageService.SetItemAsync(Constants.AUTH_KEY, userSession); // TODO Ang to Blazor Migration - remove after migration
+                    //await _localStorageService.SaveItemEncrypted(Constants.AUTH_KEY, userSession); // TODO Ang to Blazor Migration - re-instate after migration
                 }
                 else
                 {
