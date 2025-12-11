@@ -62,7 +62,7 @@ namespace AnglingClubWebsite.Authentication
 
         public async Task UpdateAuthenticationState(AuthenticateResponse? userSession, bool rememberMe)
         {
-            var userSessionAsString = JsonSerializer.Serialize(userSession, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var userSessionAsString = JsonSerializer.Serialize(userSession, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
             //_logger.LogWarning($"[UpdateAuthenticationState] called with userSession = {userSessionAsString} and rememberMe = {rememberMe}");
 
             ClaimsPrincipal claimsPrincipal;
@@ -81,7 +81,7 @@ namespace AnglingClubWebsite.Authentication
                 if (rememberMe)
                 {
                     
-                    await _localStorageService.SetItemAsync(Constants.AUTH_KEY, userSession); // TODO Ang to Blazor Migration - remove after migration
+                    await _localStorageService.SetItemAsStringAsync(Constants.AUTH_KEY, userSessionAsString); // TODO Ang to Blazor Migration - remove after migration
                     //await _localStorageService.SaveItemEncrypted(Constants.AUTH_KEY, userSession); // TODO Ang to Blazor Migration - re-instate after migration
                 }
                 else
