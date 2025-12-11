@@ -119,7 +119,7 @@ namespace Fishing.Client.Services
 
         }
 
-        public async Task<bool> LoginAsync(AuthenticateRequest model)
+        public async Task<bool> LoginAsync(AuthenticateRequest model, bool rememberMe = true)
         {
             var http = _factory.CreateClient(Constants.HTTP_CLIENT_KEY);
             http.BaseAddress = new Uri($"{http.BaseAddress!.ToString()}api/{CONTROLLER}/");
@@ -138,7 +138,7 @@ namespace Fishing.Client.Services
             {
                 var content = await response.Content.ReadFromJsonAsync<AuthenticateResponse>();
 
-                await LoginWithResponseAsync(content!, false);
+                await LoginWithResponseAsync(content!, rememberMe);
 
                 return true;
 

@@ -74,9 +74,9 @@ namespace AnglingClubWebsite.Authentication
                     new Claim("Token", userSession.Token!),
                     //new Claim(ClaimTypes.GivenName, userSession.FirstName!),
                     //new Claim(ClaimTypes.Surname, userSession.LastName!),
-                }));
-
-                userSession.Expiration = DateTime.Now.AddSeconds(userSession.ExpiresIn);
+                }, "JwtAuth"));
+                
+                userSession.Expiration = DateTime.UtcNow.AddSeconds(userSession.ExpiresIn);
 
                 if (rememberMe)
                 {
@@ -105,7 +105,7 @@ namespace AnglingClubWebsite.Authentication
                 //_messenger.Send(anonUser);
             }
 
-
+            //_logger.LogWarning($"[UpdateAuthenticationState] called, now calling NotifyAuthenticationStateChanged");
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
         }
 

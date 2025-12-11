@@ -1,18 +1,41 @@
-﻿@inject NavigationManager navManager;
+@inject NavigationManager navManager;
 @inject INavigationService navigationService;
 
-<SfMessage Severity="MessageSeverity.Warning">
-    You must be logged in to view this page.
 
-    <a @onclick="LoginThenRedirect" href="javascript:void(0)">Login</a>
+<AuthorizeView>
+    <Authorized>
+        @ChildContent
+    </Authorized>
+    <NotAuthorized>
+        <SfMessage Severity="MessageSeverity.Warning">
+            <b>Members Only</b><br/>
+            You must be logged in to view this page.
 
-</SfMessage>
+            <a @onclick="Login" href="javascript:void(0)">Login</a>
+            @* <a @onclick="LoginThenRedirect" href="javascript:void(0)">Login</a> *@
+
+        </SfMessage>
+
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
+    [Inject] IJSRuntime JS { get; set; } = default!;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     private void LoginThenRedirect()
     {
         navigationService.NavigateTo($"/login/{CallingRoute}");
+    }
+
+    // TODO Ang to Blazor Migration - not needed once migration complete
+    private async Task Login()
+    {
+
+        // e.g. "matches?embedded=true"
+        var returnPath = navManager.ToBaseRelativePath(navManager.Uri);
+        await JS.InvokeVoidAsync("blazorHostBridge.requestLogin", returnPath);
     }
 
     private string CallingRoute

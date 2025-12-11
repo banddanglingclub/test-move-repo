@@ -1,6 +1,5 @@
 // blazor-bridge.service.ts
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class BlazorBridgeService {
@@ -8,6 +7,7 @@ export class BlazorBridgeService {
   private isReady = false;
   private queuedPath: string | null = null;
   private latestAuth: { token: any | null; rememberMe: boolean | null } | null = null;
+
 
   setFrame(frame: HTMLIFrameElement) {
     this.frameWindow = frame.contentWindow;
