@@ -1,28 +1,36 @@
-﻿using AnglingClubShared;
+using AnglingClubShared;
 using AnglingClubShared.DTOs;
 using AnglingClubShared.Models.Auth;
 using AnglingClubWebsite.Extensions;
 using Blazored.LocalStorage;
+using Blazored.SessionStorage;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace AnglingClubWebsite.Authentication
 {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly ILocalStorageService _localStorageService;
+        private readonly ISessionStorageService _sessionStorageService;
         private readonly IMessenger _messenger;
         private readonly ILogger<CustomAuthenticationStateProvider> _logger;
 
         private ClaimsPrincipal _anonymous = new ClaimsPrincipal(new ClaimsIdentity());
 
-        public CustomAuthenticationStateProvider(ILocalStorageService localStorageService, IMessenger messenger, ILogger<CustomAuthenticationStateProvider> logger)
+        public CustomAuthenticationStateProvider(
+            ILocalStorageService localStorageService,
+            IMessenger messenger,
+            ILogger<CustomAuthenticationStateProvider> logger,
+            ISessionStorageService sessionStorageService)
         {
             _localStorageService = localStorageService;
             _messenger = messenger;
             _logger = logger;
+            _sessionStorageService = sessionStorageService;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -52,8 +60,11 @@ namespace AnglingClubWebsite.Authentication
             }
         }
 
-        public async Task UpdateAuthenticationState(AuthenticateResponse? userSession)
+        public async Task UpdateAuthenticationState(AuthenticateResponse? userSession, bool rememberMe)
         {
+            var userSessionAsString = JsonSerializer.Serialize(userSession, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            _logger.LogWarning($"[UpdateAuthenticationState] called with userSession = {userSessionAsString} and rememberMe = {rememberMe}");
+
             ClaimsPrincipal claimsPrincipal;
 
             if (userSession != null)
@@ -67,9 +78,18 @@ namespace AnglingClubWebsite.Authentication
 
                 userSession.Expiration = DateTime.Now.AddSeconds(userSession.ExpiresIn);
 
-                await _localStorageService.SaveItemEncrypted(Constants.AUTH_KEY, userSession);
+                if (rememberMe)
+                {
+                    await _localStorageService.SaveItemEncrypted(Constants.AUTH_KEY, userSession);
+                }
+                else
+                {
+                    // TODO Ang to Blazor Migration - this needs to be added at some point an retained
+                    //await _sessionStorageService.SaveItemEncrypted(Constants.AUTH_KEY, userSession);
+                }
 
-                _messenger.Send(new LoggedIn(new ClientMemberDto(new JwtSecurityTokenHandler().ReadJwtToken(userSession.Token))));
+                // TODO Ang to Blazor Migration - put the following back once migration is complete
+                //_messenger.Send(new LoggedIn(new ClientMemberDto(new JwtSecurityTokenHandler().ReadJwtToken(userSession.Token))));
             }
             else
             {
@@ -79,7 +99,8 @@ namespace AnglingClubWebsite.Authentication
 
                 var anonUser = new LoggedIn(new ClientMemberDto());
 
-                _messenger.Send(anonUser);
+                // TODO Ang to Blazor Migration - put the following back once migration is complete
+                //_messenger.Send(anonUser);
             }
 
 

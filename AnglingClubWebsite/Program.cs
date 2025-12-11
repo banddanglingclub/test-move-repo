@@ -4,6 +4,7 @@ using AnglingClubWebsite.Pages;
 using AnglingClubWebsite.Services;
 using AnglingClubWebsite.SharedComponents;
 using Blazored.LocalStorage;
+using Blazored.SessionStorage;
 using CommunityToolkit.Mvvm.Messaging;
 using Fishing.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -27,6 +28,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 // Auth
 builder.Services.AddBlazoredLocalStorageAsSingleton();
+builder.Services.AddBlazoredSessionStorageAsSingleton();
 builder.Services.AddTransient<AuthenticationHandler>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddCascadingAuthenticationState();

@@ -12,6 +12,7 @@ import { RefDataService } from 'src/app/services/ref-data.service';
 import { RefData } from 'src/app/models/refData';
 import { NewsService } from 'src/app/services/news.service';
 import { BlazorBridgeService } from 'src/app/services/blazor-bridge.service';
+import { Member } from 'src/app/models/member';
 
 @Component({
   selector: 'app-nav',
@@ -134,8 +135,11 @@ export class NavComponent implements OnInit {
   ngOnInit(): void {
     this.getRefData();
     this.newsService.isThereNewNews();
-    this.openBlazor('');
-
+    
+    var currentUser  = this.authenticationService.currentMemberValue;
+    if (currentUser && currentUser.token) {
+      this.blazorBridge.sendAuth(currentUser, this.authenticationService.isRemembered());
+    }
     this.isHandset$.subscribe(v => this.isHandsetSnapshot = v);
   }
 

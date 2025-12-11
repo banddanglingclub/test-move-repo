@@ -1,22 +1,27 @@
 // TODO Ang to Blazor Migration - whole file only needed during migration
-using System;
-using System.Threading.Tasks;
-using Microsoft.JSInterop;
+using AnglingClubShared.Models.Auth;
+using Fishing.Client.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using System;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 public class HostBridge : IAsyncDisposable
 {
   private readonly IJSRuntime _js;
   private readonly NavigationManager _nav;
+  private readonly ILogger<HostBridge> _logger;
   private DotNetObjectReference<HostBridge>? _objRef;
 
   public event Action<string>? NavigateRequested;
-  public event Action<string?, object?>? AuthUpdated;
+  public event Action<AuthenticateResponse?, bool>? AuthUpdated;
 
-  public HostBridge(IJSRuntime js, NavigationManager nav)
+  public HostBridge(IJSRuntime js, NavigationManager nav, ILogger<HostBridge> logger)
   {
     _js = js;
     _nav = nav;
+    _logger = logger;
   }
 
   public async Task InitializeAsync()
@@ -63,9 +68,13 @@ public class HostBridge : IAsyncDisposable
   }
 
   [JSInvokable]
-  public Task HandleAuth(string? token, object? user)
+  public Task HandleAuth(string? currentUser, bool rememberMe)
   {
-    AuthUpdated?.Invoke(token, user);
+    Console.WriteLine($"HostBridge: Auth updated. currentUser is {(currentUser is null ? "null" : "set")}, rememberMe is {rememberMe}");
+    _logger.LogWarning($"HostBridge: Auth updated. currentUser is {currentUser}, rememberMe is {rememberMe}");
+
+    AuthUpdated?.Invoke(JsonSerializer.Deserialize<AuthenticateResponse>(currentUser!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }), rememberMe);
+
     // You can also stash token in a service here
     return Task.CompletedTask;
   }

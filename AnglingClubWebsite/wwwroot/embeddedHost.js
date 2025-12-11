@@ -22,7 +22,7 @@ window.blazorHost = {
       if (msg.type === 'navigate') {
         dotnetObjRef.invokeMethodAsync('HandleNavigate', msg.path || '');
       } else if (msg.type === 'auth') {
-        dotnetObjRef.invokeMethodAsync('HandleAuth', msg.token || null, msg.user || null);
+        dotnetObjRef.invokeMethodAsync('HandleAuth', msg.token || null, msg.rememberMe || false);
       }
     }, false);
 
