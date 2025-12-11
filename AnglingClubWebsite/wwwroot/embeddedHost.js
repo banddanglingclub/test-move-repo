@@ -9,7 +9,7 @@ window.blazorHost = {
 
     window.addEventListener('message', function (e) {
 
-      console.log('[Blazor iframe] message received', e.origin, e.data);
+      //console.log('[Blazor iframe] message received', e.origin, e.data);
 
       if (!allowedOrigins.includes(e.origin)) {
         console.log('[Blazor iframe] origin rejected');

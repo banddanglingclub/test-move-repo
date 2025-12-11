@@ -78,7 +78,7 @@ export class BlazorBridgeService {
 
   sendAuth(token: any | null, rememberMe: boolean | null) {
 
-    console.log('[BlazorBridge] sendAuth called', { token, rememberMe });
+    //console.log('[BlazorBridge] sendAuth called', { token, rememberMe });
 
     // Remember the latest auth payload
     this.latestAuth = { token, rememberMe };

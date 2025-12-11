@@ -88,7 +88,7 @@ namespace Fishing.Client.Services
 
         public async Task<ClientMemberDto> GetCurrentUser()
         {
-            _logger.LogWarning("AuthenticationService.GetCurrentUser called");
+            //_logger.LogWarning("AuthenticationService.GetCurrentUser called");
 
             var authenticatedMember = await _localStorageService.ReadEncryptedItem<AuthenticateResponse>(Constants.AUTH_KEY);
 
@@ -97,7 +97,7 @@ namespace Fishing.Client.Services
                 return new ClientMemberDto();
             }
 
-            _logger.LogWarning($"AuthenticationService.GetCurrentUser authenticatedMember = {JsonSerializer.Serialize(authenticatedMember)}");
+            //_logger.LogWarning($"AuthenticationService.GetCurrentUser authenticatedMember = {JsonSerializer.Serialize(authenticatedMember)}");
 
             return new ClientMemberDto(new JwtSecurityTokenHandler().ReadJwtToken(authenticatedMember.Token));
         }

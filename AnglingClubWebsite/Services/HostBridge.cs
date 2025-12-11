@@ -70,8 +70,8 @@ public class HostBridge : IAsyncDisposable
   [JSInvokable]
   public Task HandleAuth(string? currentUser, bool rememberMe)
   {
-    Console.WriteLine($"HostBridge: Auth updated. currentUser is {(currentUser is null ? "null" : "set")}, rememberMe is {rememberMe}");
-    _logger.LogWarning($"HostBridge: Auth updated. currentUser is {currentUser}, rememberMe is {rememberMe}");
+    //Console.WriteLine($"HostBridge: Auth updated. currentUser is {(currentUser is null ? "null" : "set")}, rememberMe is {rememberMe}");
+    //_logger.LogWarning($"HostBridge: Auth updated. currentUser is {currentUser}, rememberMe is {rememberMe}");
 
     AuthUpdated?.Invoke(JsonSerializer.Deserialize<AuthenticateResponse>(currentUser!, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }), rememberMe);
 

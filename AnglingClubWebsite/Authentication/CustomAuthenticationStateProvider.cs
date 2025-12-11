@@ -63,7 +63,7 @@ namespace AnglingClubWebsite.Authentication
         public async Task UpdateAuthenticationState(AuthenticateResponse? userSession, bool rememberMe)
         {
             var userSessionAsString = JsonSerializer.Serialize(userSession, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            _logger.LogWarning($"[UpdateAuthenticationState] called with userSession = {userSessionAsString} and rememberMe = {rememberMe}");
+            //_logger.LogWarning($"[UpdateAuthenticationState] called with userSession = {userSessionAsString} and rememberMe = {rememberMe}");
 
             ClaimsPrincipal claimsPrincipal;
 
