@@ -111,8 +111,13 @@ export class BlazorHostComponent implements OnInit, OnDestroy {
   }
 
   private messageHandler = (event: MessageEvent) => {
-    // SECURITY: only accept messages from your Blazor origin
-    if (event.origin !== 'https://localhost:7099') {
+    const allowedOrigins = [
+      'https://localhost:7099',      // Blazor dev
+      window.location.origin         // prod (same origin, /new)
+    ];
+
+    if (!allowedOrigins.includes(event.origin)) {
+      console.log('[Ang messageHandler] origin rejected');
       return;
     }
 
