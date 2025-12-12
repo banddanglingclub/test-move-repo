@@ -53,6 +53,7 @@ export class LoginComponent implements OnInit {
 
         this.blazorPage = state.blazorPage ?? null;
         this.angularReturnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? null; // if you use this for Angular guards
+
     }
 
     onSubmit() {

@@ -8,9 +8,11 @@ window.blazorHostBridge = {
         source: 'BLAZOR',
         type: 'REQUEST_LOGIN',
         // full URL, fall back to current if not provided
-        blazorPage: blazorPage || (window.location.pathname + window.location.search)
+        //blazorPage: blazorPage || (window.location.pathname + window.location.search)
+        blazorPage: blazorPage
       };
 
+      console.warn('blazorHostBridge.requestLogin message being sent to parent frame', blazorPage);
       // TODO: replace '*' with your Angular origin in prod
       window.parent.postMessage(message, '*');
     } else {
