@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  
+    <!-- TODO Ang to Blazor Migration - Not needed until migration from ang is complete-->
+    <!-- <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest> -->
+  
+    <UserSecretsId>f2517751-8bef-4a2b-9ba1-d7e787c957bc</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Index.ViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Syncfusion.Blazor.Calendars" Version="28.1.39" />
+    <PackageReference Include="Syncfusion.Blazor.Cards" Version="28.1.39" />
+    <PackageReference Include="Syncfusion.Blazor.DropDowns" Version="28.1.39" />
+    <PackageReference Include="Syncfusion.Blazor.Navigations" Version="28.1.39" />
+    <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="28.1.39" />
+    <PackageReference Include="Syncfusion.Blazor.RichTextEditor" Version="28.1.39" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="28.1.39" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AnglingClubShared\AnglingClubShared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="SharedComponents\EditableCard.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="wwwroot\appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- TODO Ang to Blazor Migration - only needed until migration from ang is complete -->
+  <ItemGroup>
+    <!-- Treat templates as non-content so they are not published -->
+    <None Include="IndexTemplates\index.dev.html" />
+    <None Include="IndexTemplates\index.prod.html" />
+  </ItemGroup>
+
+  <!-- TODO Ang to Blazor Migration - only needed until migration from ang is complete -->
+  <Target Name="SelectIndexHtml" BeforeTargets="Build">
+    <!-- Debug / local dev: base "/" -->
+    <Copy SourceFiles="IndexTemplates\index.dev.html" DestinationFiles="wwwroot\index.html" Condition="'$(Configuration)' == 'Debug'" />
+
+    <!-- Release / publish: base "/new/" -->
+    <Copy SourceFiles="IndexTemplates\index.prod.html" DestinationFiles="wwwroot\index.html" Condition="'$(Configuration)' == 'Release'" />
+  </Target>
+
+</Project>
