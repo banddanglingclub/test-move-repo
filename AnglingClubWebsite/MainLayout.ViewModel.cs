@@ -244,7 +244,7 @@ namespace AnglingClubWebsite
 
             List<MenuItem> menuItems = new List<MenuItem>();
 
-            menuItems.Add(new MenuItem { Id = "11", Name = "Login", NavigateUrl = menuUrl("Login") });
+            menuItems.Add(new MenuItem { Id = "11", Name = "Login", NavigateUrl = menuUrl("/Login") });
 
             Menu.AddRange(menuItems);
             Menu = Menu.OrderBy(x => x.Id).ToList();
