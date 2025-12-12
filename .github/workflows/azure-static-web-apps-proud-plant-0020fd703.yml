@@ -31,7 +31,8 @@ jobs:
         with:
           node-version: "16.14.0"
           cache: "npm"
-
+          cache-dependency-path: "angular-app/package-lock.json"
+          
       # Build Angular (inside angular-app folder)
       - name: Build Angular
         run: |
