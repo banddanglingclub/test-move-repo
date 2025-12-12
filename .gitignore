@@ -74,6 +74,9 @@ tools/gulp-tasks/cldr/cldr-data/
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# ignore publish files that may have been created locally for testing
+/blazor-publish/
+
 # User-specific files
 *.rsuser
 *.suo
