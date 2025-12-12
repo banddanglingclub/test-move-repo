@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15 d18.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnglingClubWebsite", "AnglingClubWebsite.csproj", "{8D1121ED-88A0-32C2-B9AA-784D4B562882}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnglingClubShared", "..\AnglingClubShared\AnglingClubShared.csproj", "{A52D16E1-DF24-1004-A344-EAE47638C8D1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D1121ED-88A0-32C2-B9AA-784D4B562882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D1121ED-88A0-32C2-B9AA-784D4B562882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D1121ED-88A0-32C2-B9AA-784D4B562882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D1121ED-88A0-32C2-B9AA-784D4B562882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A52D16E1-DF24-1004-A344-EAE47638C8D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A52D16E1-DF24-1004-A344-EAE47638C8D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A52D16E1-DF24-1004-A344-EAE47638C8D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A52D16E1-DF24-1004-A344-EAE47638C8D1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E840409-3B37-4434-A7BC-EACE128BAED8}
+	EndGlobalSection
+EndGlobal
