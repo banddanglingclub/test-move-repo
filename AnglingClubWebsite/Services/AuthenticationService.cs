@@ -26,6 +26,7 @@ namespace Fishing.Client.Services
         private readonly ILogger<AuthenticationService> _logger;
         private readonly ICurrentUserService _currentUserService;
         private readonly HostBridge _hostBridge;
+        private readonly IAuthTokenStore _authTokenStore;
 
 
         private const string JWT_KEY = nameof(JWT_KEY);
@@ -36,7 +37,7 @@ namespace Fishing.Client.Services
 
         public event Action<string?>? LoginChange;
 
-        public AuthenticationService(IHttpClientFactory factory, ILocalStorageService localStorageService, AuthenticationStateProvider stateProvider, ILogger<AuthenticationService> logger, ICurrentUserService currentUserService, HostBridge hostBridge)
+        public AuthenticationService(IHttpClientFactory factory, ILocalStorageService localStorageService, AuthenticationStateProvider stateProvider, ILogger<AuthenticationService> logger, ICurrentUserService currentUserService, HostBridge hostBridge, IAuthTokenStore authTokenStore)
         {
             _factory = factory;
             _localStorageService = localStorageService;
@@ -56,6 +57,7 @@ namespace Fishing.Client.Services
                     await LoginWithResponseAsync(authResponse, rememberMe);
                 }
             };
+            _authTokenStore = authTokenStore;
         }
 
         //public async ValueTask<string> GetJwtAsync()
@@ -90,7 +92,7 @@ namespace Fishing.Client.Services
         {
             //_logger.LogWarning("AuthenticationService.GetCurrentUser called");
 
-            var authenticatedMember = await _localStorageService.ReadEncryptedItem<AuthenticateResponse>(Constants.AUTH_KEY);
+            var authenticatedMember = _authTokenStore.Current;
 
             if (authenticatedMember == null)
             {

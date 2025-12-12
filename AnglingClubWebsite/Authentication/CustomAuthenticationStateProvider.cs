@@ -18,6 +18,7 @@ namespace AnglingClubWebsite.Authentication
         private readonly ISessionStorageService _sessionStorageService;
         private readonly IMessenger _messenger;
         private readonly ILogger<CustomAuthenticationStateProvider> _logger;
+        private readonly IAuthTokenStore _authTokenStore;
 
         private ClaimsPrincipal _anonymous = new ClaimsPrincipal(new ClaimsIdentity());
 
@@ -25,23 +26,27 @@ namespace AnglingClubWebsite.Authentication
             ILocalStorageService localStorageService,
             IMessenger messenger,
             ILogger<CustomAuthenticationStateProvider> logger,
-            ISessionStorageService sessionStorageService)
+            ISessionStorageService sessionStorageService,
+            IAuthTokenStore authTokenStore)
         {
             _localStorageService = localStorageService;
             _messenger = messenger;
             _logger = logger;
             _sessionStorageService = sessionStorageService;
+            _authTokenStore = authTokenStore;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
+            //_logger.LogWarning($"[GetAuthenticationStateAsync] called with");
             try
             {
-                var userSession = await _localStorageService.ReadEncryptedItem<AuthenticateResponse>(Constants.AUTH_KEY);
+                
+                var userSession = _authTokenStore.Current;
 
                 if (userSession == null)
                 {
-                    return await Task.FromResult(new AuthenticationState(_anonymous));
+                    return new AuthenticationState(_anonymous);
                 }
 
                 var expired = userSession.Expiration < DateTime.UtcNow;
@@ -86,9 +91,11 @@ namespace AnglingClubWebsite.Authentication
                 }
                 else
                 {
-                    // TODO Ang to Blazor Migration - this needs to be added at some point an retained
-                    //await _sessionStorageService.SaveItemEncrypted(Constants.AUTH_KEY, userSession);
+                    await _sessionStorageService.SetItemAsStringAsync(Constants.AUTH_KEY, userSessionAsString); // TODO Ang to Blazor Migration - remove after migration
+                    //await _sessionStorageService.SaveItemEncrypted(Constants.AUTH_KEY, userSession); // TODO Ang to Blazor Migration - re-instate after migration
                 }
+
+                _authTokenStore.Current = userSession;
 
                 // TODO Ang to Blazor Migration - put the following back once migration is complete
                 //_messenger.Send(new LoggedIn(new ClientMemberDto(new JwtSecurityTokenHandler().ReadJwtToken(userSession.Token))));
@@ -98,6 +105,9 @@ namespace AnglingClubWebsite.Authentication
                 claimsPrincipal = _anonymous;
 
                 await _localStorageService.RemoveItemAsync(Constants.AUTH_KEY);
+                await _sessionStorageService.RemoveItemAsync(Constants.AUTH_KEY);
+
+                _authTokenStore.Current = null;
 
                 var anonUser = new LoggedIn(new ClientMemberDto());
 
@@ -111,11 +121,13 @@ namespace AnglingClubWebsite.Authentication
 
         public async Task<string> GetToken()
         {
+            await Task.Delay(0);
+
             var result = string.Empty;
 
             try
             {
-                var userSession = await _localStorageService.ReadEncryptedItem<AuthenticateResponse>(Constants.AUTH_KEY);
+                var userSession = _authTokenStore.Current;
 
                 if (userSession != null)
                 {
