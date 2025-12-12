@@ -21,6 +21,7 @@ jobs:
           lfs: false
 
       ######################################################################################
+      # Build Angular (now in ./angular-app) and Blazor, then merge outputs
       # Following came from ChatGPT, up until the commented out "Build and Deploy" step
       ######################################################################################
 
@@ -31,30 +32,30 @@ jobs:
           node-version: "16.14.0"
           cache: "npm"
 
-      # Build Angular
+      # Build Angular (inside angular-app folder)
       - name: Build Angular
         run: |
           npm ci
           npm run build -- --configuration production
-        working-directory: ./   # adjust if Angular is in a subfolder
+        working-directory: ./angular-app
 
       # Build Blazor
       - name: Build Blazor
         run: |
           dotnet publish AnglingClubWebsite/AnglingClubWebsite.csproj -c Release -o blazor-publish
-          # publish/wwwroot is effectively blazor-publish/wwwroot in this layout
-        # working-directory not needed if you pass the csproj path
 
       # Combine outputs: copy Blazor under /new in Angular dist
       - name: Combine Angular and Blazor outputs
         run: |
-          ANG_DIST="dist/AnglingClubWebsiteAng"   # your existing output_location
+          ANG_DIST="angular-app/dist/AnglingClubWebsiteAng"   # Angular dist now under angular-app
           BLAZOR_WWWROOT="blazor-publish/wwwroot"
 
           mkdir -p "$ANG_DIST/new"
           cp --verbose --recursive "$BLAZOR_WWWROOT/." "$ANG_DIST/new"
-          # copy staticwebapp.config.json if you keep it at repo root
-          cp src/staticwebapp.config.json "$ANG_DIST/" || true
+
+          # Copy staticwebapp.config.json into the built root if you keep it in angular-app/src
+          cp angular-app/src/staticwebapp.config.json "$ANG_DIST/" || true
+          # If you later move it to angular-app/, change the line above accordingly.
 
       # Deploy combined site exactly as built
       - name: Build And Deploy
@@ -66,13 +67,13 @@ jobs:
           action: "upload"
 
           # IMPORTANT: point at the *built* folder, not the repo root
-          app_location: "dist/AnglingClubWebsiteAng"
+          app_location: "angular-app/dist/AnglingClubWebsiteAng"
           output_location: ""          # no extra build output folder
           skip_app_build: true         # tell SWA *not* to build again
 
           api_location: ""
 
-
+      # Original template deploy (kept commented for reference)
       # - name: Build And Deploy
       #   id: builddeploy
       #   uses: Azure/static-web-apps-deploy@v1
@@ -98,8 +99,3 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PROUD_PLANT_0020FD703 }}
           action: "close"
-
-
-
-
-

@@ -1,14 +1,64 @@
-/.angular/cache
-.DS_STORE
+# ------------------------
+# Angular (now under angular-app/)
+# ------------------------
 
-/dist/
-/bazel-out
-/integration/bazel/bazel-*
-*.log
-node_modules
+angular-app/.angular/cache
+angular-app/.DS_STORE
 
-# Include when developing application packages.
-pubspec.lock
+# Angular dist output
+angular-app/dist/
+
+# Angular node_modules
+angular-app/node_modules/
+
+# Angular logs
+angular-app/*.log
+angular-app/npm-debug.log
+angular-app/yarn-error.log
+
+# ------------------------
+# Blazor & .NET
+# ------------------------
+
+# Blazor publish output (local testing)
+blazor-publish/
+
+# Standard .NET ignores
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# .vs folder
+.vs/
+
+# Others from original file (unchanged)
+.bazelrc.user
+.ng-dev.user*
+.notes.md
+baseline.json
+.history
+tools/gulp-tasks/cldr/cldr-data/
+.husky/_
+
+# IDE / environment folders
 .c9
 .idea/
 .devcontainer/*
@@ -19,10 +69,22 @@ pubspec.lock
 .vscode/launch.json
 .vscode/settings.json
 .vscode/tasks.json
+
+# vim swap
 *.swo
 *.swp
+
 modules/.settings
 modules/.vscode
+
+# Secrets
+*secret.js
+
+# Build analytics
+.build-analytics
+
+# Misc original ignores retained
+/modules/rollup-test/dist/
 .vimrc
 .nvimrc
 
